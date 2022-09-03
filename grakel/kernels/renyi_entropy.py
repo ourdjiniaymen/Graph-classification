@@ -40,12 +40,11 @@ class RenyiEntropy(Kernel):
         :param v: int, node in G
         :return: h-dimensional vector which is the h-layer entropy representation of G
         """
-        """h_layer_entropy_vector = list()
+        h_layer_entropy_vector = list()
         for k in range(1, self.depth + 1):
             subgraph = k_layer_expansion_subgraph(G, S, v, k)
-            h_layer_entropy_vector.append(self.entropy_method(subgraph))"""
-        subgraph = k_layer_expansion_subgraph(G, S, v, self.depth)
-        return self.entropy_method(subgraph)
+            h_layer_entropy_vector.append(self.entropy_method(subgraph))
+        return h_layer_entropy_vector
 
     def parse_input(self, X):
         """Parse and create features for "renyi entropy" kernel.
