@@ -1499,6 +1499,18 @@ class Graph(object):
                         next_layer.append(child)
             current_layer = next_layer
 
+    def r_radius_neighborhood(self, source, r):
+        vertices = list(self.vertices)
+        if source not in vertices:
+            raise nx.NetworkXError(f"The node {source} is not in the graph.")
+
+        bfs_generator = self.bfs_layers(source)
+        expansion_nodes = list()
+        for i, layer in enumerate(bfs_generator):
+            if i <= r:
+                expansion_nodes += layer
+        return set(expansion_nodes)
+
     def degrees(self):
         list_degrees = dict()
         for v in self.vertices:
