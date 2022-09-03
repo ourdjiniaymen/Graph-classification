@@ -1475,6 +1475,30 @@ class Graph(object):
 
         return subgraph
 
+    def bfs_layers(self, sources):
+        vertices = list(self.vertices)
+        if sources in vertices:
+            sources = [sources]
+
+        current_layer = list(sources)
+        visited = set(sources)
+
+        for source in current_layer:
+            if source not in vertices:
+                raise nx.NetworkXError(f"The node {source} is not in the graph.")
+
+        # this is basically BFS, except that the current layer only stores the nodes at
+        # same distance from sources at each iteration
+        while current_layer:
+            yield current_layer
+            next_layer = list()
+            for node in current_layer:
+                for child in self.neighbors(node):
+                    if child not in visited:
+                        visited.add(child)
+                        next_layer.append(child)
+            current_layer = next_layer
+
     def degrees(self):
         list_degrees = dict()
         for v in self.vertices:
