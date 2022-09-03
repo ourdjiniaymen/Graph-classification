@@ -29,7 +29,7 @@ install_and_import('numpy')
 from numpy import get_include
 install_and_import('Cython')
 from Cython.Build import build_ext
-
+install_and_import('networkx')
 # Compile extensions
 
 # Set optimization arguments for compilation
