@@ -32,6 +32,7 @@ from grakel.kernels import EdgeHistogram
 from grakel.kernels import GraphHopper
 from grakel.kernels import CoreFramework
 from grakel.kernels import WeisfeilerLehmanOptimalAssignment
+from grakel.kernels import RenyiEntropy
 
 # Python 2/3 cross-compatibility import
 from future.utils import iteritems
@@ -53,7 +54,8 @@ sbk = [
     ["propagation", "PR"],
     ["pyramid_match", "PM"],
     ["graph_hopper", "GH"],
-    ["weisfeiler_lehman_optimal_assignment", "WL-OA"]
+    ["weisfeiler_lehman_optimal_assignment", "WL-OA"],
+    ["renyi_entropy", "RE"]
 ]
 
 sbks = set(e for ls in sbk for e in ls)
@@ -541,7 +543,8 @@ class GraphKernel(BaseEstimator, TransformerMixin):
                 return GraphHopper, kernel
             elif kernel_name in sbk[15]:
                 return WeisfeilerLehmanOptimalAssignment, kernel
-
+            elif kernel_name in sbk[16]:
+                return RenyiEntropy, kernel
 
         elif kernel_name in sfs:
             if len(kernel_list):

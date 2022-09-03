@@ -29,6 +29,7 @@ from grakel.kernels import EdgeHistogram
 from grakel.kernels import GraphHopper
 from grakel.kernels import CoreFramework
 from grakel.kernels import WeisfeilerLehmanOptimalAssignment
+from grakel.kernels import RenyiEntropy
 
 from grakel.utils import KMTransformer
 from grakel.utils import cross_validate_Kfold_SVM
@@ -44,6 +45,7 @@ __all__ = [
     "GraphletSampling",
     "RandomWalk",
     "RandomWalkLabeled",
+    "RenyiEntropy",
     "ShortestPath",
     "ShortestPathAttr",
     "WeisfeilerLehman",

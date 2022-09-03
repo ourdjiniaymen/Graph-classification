@@ -26,6 +26,7 @@ from grakel.kernels.edge_histogram import EdgeHistogram
 from grakel.kernels.graph_hopper import GraphHopper
 from grakel.kernels.core_framework import CoreFramework
 from grakel.kernels.weisfeiler_lehman_optimal_assignment import WeisfeilerLehmanOptimalAssignment
+from grakel.kernels.renyi_entropy import RenyiEntropy
 
 __all__ = [
     "default_executor",
@@ -33,6 +34,7 @@ __all__ = [
     "GraphletSampling",
     "RandomWalk",
     "RandomWalkLabeled",
+    "RenyiEntropy",
     "ShortestPath",
     "ShortestPathAttr",
     "WeisfeilerLehman",
