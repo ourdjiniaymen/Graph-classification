@@ -1,9 +1,9 @@
 """Init file for the whole grakel project."""
 from grakel import datasets
+from grakel import svm_classification
 from grakel.graph import Graph
 
 from grakel.graph_kernels import GraphKernel
-
 
 from grakel.kernels import Kernel
 
@@ -39,6 +39,7 @@ from grakel.utils import graph_from_csv
 
 __all__ = [
     "datasets",
+    "svm_classification",
     "GraphKernel",
     "Graph",
     "Kernel",
