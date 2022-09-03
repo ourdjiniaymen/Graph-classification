@@ -554,3 +554,12 @@ def get_dataset_info(dataset_name, default=None):
     """
     return dataset_metadata.get(dataset_name, default)
 
+
+def dataset_max_degree(dataset_name):
+    dataset = fetch_dataset(dataset_name, verbose=False)
+    graphs = dataset.data
+    list_maximum_degrees = list()
+    for graph in graphs:
+        max_degree = Graph(graph[0]).max_degree()
+        list_maximum_degrees.append(max_degree)
+    return max(list_maximum_degrees)
