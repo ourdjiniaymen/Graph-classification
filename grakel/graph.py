@@ -6,6 +6,7 @@ import numbers
 import warnings
 
 import numpy as np
+import networkx as nx
 from scipy.sparse import isspmatrix
 from scipy.sparse.csgraph import laplacian
 
@@ -1473,6 +1474,31 @@ class Graph(object):
                         return self.edsamic[new_indexes[i]]
 
         return subgraph
+
+    def degrees(self):
+        list_degrees = dict()
+        for v in self.vertices:
+            list_degrees[v] = len(self.neighbors(vertex=v))
+        return list_degrees
+
+    def average_degree(self):
+        list_degrees = self.degrees()
+        return round(sum(list_degrees) / len(list_degrees), 1)
+
+    def max_degree(self):
+        return max(self.degrees())
+
+    def diameter(self, list_edges):
+        spm = self.nx_shortest_path_matrix()
+        return np.max(spm)
+
+    def nx_shortest_path_matrix(self):
+        nx_graph = nx.Graph()
+        nx_graph.add_nodes_from(list(self.vertices))
+        for v in self.vertices:
+            for u in self.neighbors(v):
+                nx_graph.add_edge(v, u)
+        return nx.floyd_warshall_numpy(nx_graph)
 
     @property
     def format(self):
