@@ -563,3 +563,21 @@ def dataset_max_degree(dataset_name):
         max_degree = Graph(graph[0]).max_degree()
         list_maximum_degrees.append(max_degree)
     return max(list_maximum_degrees)
+
+
+def networkx_dataset(dataset_name):
+    dataset = fetch_dataset(dataset_name, verbose=False)
+    graphs = dataset.data
+    y = dataset.target
+    nx_dataset = dict()
+    for graph_id in range(len(y)):
+        graph = Graph(graphs[graph_id][0], graphs[graph_id][1])
+        nx_graph = nx.Graph()
+        for v in graph.vertices:
+            try:
+                nx_graph.add_node(v, label=graph.node_labels[v])
+            except KeyError:
+                nx_graph.add_node(v, label=0)
+        nx_graph.add_edges_from(graphs[graph_id][0])
+        nx_dataset[graph_id] = (nx_graph, y[graph_id])
+    return nx_dataset
