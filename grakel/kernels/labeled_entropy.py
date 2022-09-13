@@ -10,19 +10,28 @@ class LabeledEntropy(Kernel):
     def __init__(self, n_jobs=None,
                  normalize=False,
                  verbose=False,
-                 k=1):
+                 k=1,
+                 entropy_type='von_neumann_entropy'):
         super(LabeledEntropy, self).__init__(
             n_jobs=n_jobs, normalize=normalize, verbose=verbose)
         self.attributed = False
         self.k = k
-        self._initialized.update({"k": False})
+        self.entropy_type = entropy_type
+        self._initialized.update({"k": False, 'entropy_type': False})
 
     def initialize(self):
         """Initialize all transformer arguments, needing initialization."""
         super(LabeledEntropy, self).initialize()
+        if not self._initialized['entropy_method']:
+            if self.entropy_type == 'renyi_entropy':
+                self.entropy_method = labeled_renyi_entropy
+            elif self.entropy_type == 'von_neumann_entropy':
+                self.entropy_method = labeled_von_neumann_entropy
+            else:
+                raise ValueError('Unsupported "entropy_type"')
 
     def parse_input(self, X):
-        """Parse and create features for "deep renyi entropy" kernel.
+        """Parse and create features for "labeled entropy" kernel.
 
         Parameters
         ----------
@@ -74,7 +83,8 @@ class LabeledEntropy(Kernel):
                     node_labels = dict(zip(x.vertices, [0] * len(x.vertices)))
                 entropy_representation[i] = dict()
                 for v in x.vertices:
-                    labeled_entropy = (neighborhood_distribution_entropy(x, v, self.k), node_labels[v])
+                    labeled_entropy = (
+                        neighborhood_distribution_entropy(x, v, self.k, self.entropy_method), node_labels[v])
                     if labeled_entropy not in self._enum:
                         if self._method_calling == 1:
                             idx = len(self._enum)
@@ -253,13 +263,15 @@ class LabeledEntropyAttr(Kernel):
                  normalize=False,
                  verbose=False,
                  k=1,
+                 entropy_type='von_neumann_entropy',
                  metric=np.dot):
         super(LabeledEntropyAttr, self).__init__(
             n_jobs=n_jobs, normalize=normalize, verbose=verbose)
         self.attributed = False
         self.k = k
+        self.entropy_type = entropy_type
         self.metric = metric
-        self._initialized.update({"k": False, 'metric': False})
+        self._initialized.update({"k": False, 'entropy_type': False, 'metric': False})
 
     def initialize(self):
         """Initialize all transformer arguments, needing initialization."""
@@ -268,9 +280,16 @@ class LabeledEntropyAttr(Kernel):
             if not callable(self.metric):
                 raise TypeError('"metric" must be callable')
             self._initialized["metric"] = True
+        if not self._initialized['entropy_method']:
+            if self.entropy_type == 'renyi_entropy':
+                self.entropy_method = labeled_renyi_entropy
+            elif self.entropy_type == 'von_neumann_entropy':
+                self.entropy_method = labeled_von_neumann_entropy
+            else:
+                raise ValueError('Unsupported "entropy_type"')
 
     def parse_input(self, X):
-        """Parse and create features for "deep renyi entropy" kernel.
+        """Parse and create features for "labeled entropy" kernel.
 
         Parameters
         ----------
@@ -316,7 +335,8 @@ class LabeledEntropyAttr(Kernel):
                     labels = dict(zip(x.vertices, [0] * len(x.vertices)))
                 graph_entropy_representation = list()
                 for v in x.vertices:
-                    graph_entropy_representation.append((neighborhood_distribution_entropy(x, v, self.k), labels[v]))
+                    graph_entropy_representation.append(
+                        (neighborhood_distribution_entropy(x, v, self.k, self.entropy_method), labels[v]))
                 ni += 1
                 entropy_representation.append(graph_entropy_representation)
             if ni == 0:
@@ -332,10 +352,10 @@ class LabeledEntropyAttr(Kernel):
         return kernel
 
 
-def labeled_entropy(G, center):
+def labeled_renyi_entropy(G, center):
     """
     :param G: undirected unweighted graph
-    :return: renyi entropy of G
+    :return: labeled renyi entropy of G
     """
     degrees = G.degrees()
     try:
@@ -351,6 +371,26 @@ def labeled_entropy(G, center):
             p = degrees[v] / sum_degrees
             entropy += p ** 2
     return -1 * np.log(entropy)
+
+
+def labeled_von_neumann_entropy(G, center):
+    """
+    :param G: undirected unweighted graph
+    :return: von neumann entropy of G
+    """
+    degrees = G.degrees()
+    vertices = G.vertices
+    try:
+        labels = G.get_labels(purpose="dictionary")
+    except ValueError:
+        labels = dict.fromkeys(G.vertices, 0)
+
+    l = list(labels.values()).count(labels[center])
+    sum = 0
+    for v in vertices:
+        if labels[v] == labels[center]:
+            sum += 1 / ((l ** 2) * degrees[v] * degrees[center])
+    return 1 - (1 / l) - sum
 
 
 def label_sum_degrees(G, degrees, labels, center):
@@ -373,11 +413,11 @@ def r_radius_subgraph(G, source, r):
     return G.get_subgraph(r_radius_neighborhood)
 
 
-def neighborhood_distribution_entropy(G, source, k):
+def neighborhood_distribution_entropy(G, source, k, entropy_method):
     """
     :param G: undirected unweighted graph
     :param source: int, node in G
     :return: neighborhood distribution entropy
     """
     subgraph = r_radius_subgraph(G, source, k)
-    return labeled_entropy(subgraph, source)
+    return entropy_method(subgraph, source)
