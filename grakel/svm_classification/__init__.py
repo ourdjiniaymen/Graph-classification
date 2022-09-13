@@ -10,10 +10,11 @@ from grakel.svm_classification.kernel_strategy import GraphHopperStrategy
 from grakel.svm_classification.kernel_strategy import RandomWalkStrategy
 from grakel.svm_classification.kernel_strategy import WeisfeilerLehmanOptimalAssignmentStrategy
 from grakel.svm_classification.kernel_strategy import NeighborhoodSubgraphPairwiseDistanceStrategy
+from grakel.svm_classification.kernel_strategy import LabeledEntropyStrategy
 from grakel.svm_classification.unified_classification_model import UnifiedClassificationModel
 
 __all__ = [
-    #"default_executor",
+    # "default_executor",
     "UnifiedClassificationModel",
     "KernelStrategy",
     "GraphletSamplingStrategy",
@@ -26,7 +27,6 @@ __all__ = [
     "RandomWalkStrategy",
     "WeisfeilerLehmanOptimalAssignmentStrategy",
     "NeighborhoodSubgraphPairwiseDistanceStrategy",
+    "LabeledEntropyStrategy",
     "KernelException"
 ]
-
-

@@ -99,8 +99,10 @@ class UnifiedClassificationModel:
             accuracies = []
             for i in range(self.experiments):
                 if kernel_configuration != self.prev_kernel_configuration:
-                    self.K = self._kernel_strategy.get_kernel_instance(kernel_configuration, self.with_labels,
-                                                                       self.with_attributes).fit_transform(self.graphs)
+                    self.K = self._kernel_strategy.get_kernel_instance(configuration=kernel_configuration,
+                                                                       with_labels=self.with_labels,
+                                                                       with_attributes=self.with_attributes).fit_transform(
+                        self.graphs)
                     print('check')
                 K = self.K
                 y = self.y

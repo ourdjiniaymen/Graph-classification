@@ -30,6 +30,8 @@ from grakel.kernels import GraphHopper
 from grakel.kernels import CoreFramework
 from grakel.kernels import WeisfeilerLehmanOptimalAssignment
 from grakel.kernels import RenyiEntropy
+from grakel.kernels import LabeledEntropy
+from grakel.kernels import LabeledEntropyAttr
 
 from grakel.utils import KMTransformer
 from grakel.utils import cross_validate_Kfold_SVM
@@ -54,6 +56,8 @@ __all__ = [
     "PyramidMatch",
     "SubgraphMatching",
     "NeighborhoodSubgraphPairwiseDistance",
+    "LabeledEntropy",
+    "LabeledEntropyAttr",
     "LovaszTheta",
     "SvmTheta",
     "OddSth",

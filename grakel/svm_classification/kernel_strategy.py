@@ -122,3 +122,16 @@ class NeighborhoodSubgraphPairwiseDistanceStrategy(KernelStrategy):
 
     def __str__(self) -> str:
         return 'NSPD'
+
+
+class LabeledEntropyStrategy(KernelStrategy):
+
+    def get_kernel_instance(self, configuration: dict, with_labels, with_attributes):
+        from grakel.kernels import LabeledEntropy
+        from grakel.kernels import LabeledEntropyAttr
+        if with_attributes:
+            return LabeledEntropyAttr(k=configuration['k'], entropy_type=configuration['entropy_type'])
+        return LabeledEntropy(k=configuration['k'], entropy_type=configuration['entropy_type'])
+
+    def __str__(self) -> str:
+        return 'LEK'
