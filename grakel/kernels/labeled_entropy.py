@@ -1,6 +1,7 @@
 import warnings
 from collections.abc import Iterable
-from grakel import Kernel, Graph
+from grakel.graph import Graph
+from grakel.kernels import Kernel
 import numpy as np
 from sklearn.utils.validation import check_is_fitted
 from sklearn.exceptions import NotFittedError
@@ -22,7 +23,7 @@ class LabeledEntropy(Kernel):
     def initialize(self):
         """Initialize all transformer arguments, needing initialization."""
         super(LabeledEntropy, self).initialize()
-        if not self._initialized['entropy_method']:
+        if not self._initialized['entropy_type']:
             if self.entropy_type == 'renyi_entropy':
                 self.entropy_method = labeled_renyi_entropy
             elif self.entropy_type == 'von_neumann_entropy':
@@ -280,7 +281,7 @@ class LabeledEntropyAttr(Kernel):
             if not callable(self.metric):
                 raise TypeError('"metric" must be callable')
             self._initialized["metric"] = True
-        if not self._initialized['entropy_method']:
+        if not self._initialized['entropy_type']:
             if self.entropy_type == 'renyi_entropy':
                 self.entropy_method = labeled_renyi_entropy
             elif self.entropy_type == 'von_neumann_entropy':
