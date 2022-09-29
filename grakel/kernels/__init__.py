@@ -4,6 +4,7 @@
 from grakel.kernels.kernel import Kernel
 
 from grakel.kernels.graphlet_sampling import GraphletSampling
+from grakel.kernels.labeled_entropy import LabeledEntropy, LabeledEntropyAttr
 from grakel.kernels.random_walk import RandomWalk
 from grakel.kernels.random_walk import RandomWalkLabeled
 from grakel.kernels.shortest_path import ShortestPath
@@ -42,6 +43,8 @@ __all__ = [
     "PyramidMatch",
     "SubgraphMatching",
     "NeighborhoodSubgraphPairwiseDistance",
+    "LabeledEntropy",
+    "LabeledEntropyAttr",
     "LovaszTheta",
     "SvmTheta",
     "OddSth",
