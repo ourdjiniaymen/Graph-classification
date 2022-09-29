@@ -4,8 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from base.models import Dataset, Kernel, Result
 from .serializers import DatasetSerializer, EvaluationSerializer, KernelSerializer, ResultSerializer
-import numpy as np
-from grakel.svm_classification import GraphletSamplingStrategy, ShortestPathStrategy, VertexHistogramStrategy, WeisfeilerLehmanSubtreeStrategy, WeisfeilerLehmanOptimalAssignmentStrategy, RenyiStrategy, RandomWalkStrategy, NeighborhoodHashStrategy, NeighborhoodSubgraphPairwiseDistanceStrategy, GraphHopperStrategy
+from grakel.svm_classification import GraphletSamplingStrategy, ShortestPathStrategy, VertexHistogramStrategy, WeisfeilerLehmanSubtreeStrategy, WeisfeilerLehmanOptimalAssignmentStrategy, RenyiStrategy, RandomWalkStrategy, NeighborhoodHashStrategy, NeighborhoodSubgraphPairwiseDistanceStrategy, GraphHopperStrategy, LabeledEntropyStrategy
 from grakel.svm_classification import UnifiedClassificationModel
 
 from api import serializers
@@ -92,6 +91,8 @@ def get_kernel_strategy(kernel_name):
         return NeighborhoodHashStrategy
     elif kernel_name == "GH" or kernel_name == "Graph hopper":
         return GraphHopperStrategy
+    elif kernel_name == "LE" or kernel_name == "Labeled entropy":
+        return LabeledEntropyStrategy
     else:
         return None
 
