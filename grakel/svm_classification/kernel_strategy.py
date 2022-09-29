@@ -134,4 +134,4 @@ class LabeledEntropyStrategy(KernelStrategy):
         return LabeledEntropy(k=configuration['k'], entropy_type=configuration['entropy_type'])
 
     def __str__(self) -> str:
-        return 'LEK'
+        return 'LE'
