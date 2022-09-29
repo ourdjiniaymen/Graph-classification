@@ -15,7 +15,7 @@ doc/modules/generated
 # Distribution / packaging
 
 .Python
-env/
+venv/
 build/
 develop-eggs/
 dist/

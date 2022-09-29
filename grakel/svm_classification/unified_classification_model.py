@@ -3,6 +3,7 @@ import itertools as it
 import statistics as stat
 from operator import itemgetter
 import random
+import time
 import numpy as np
 from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.svm import SVC
@@ -27,6 +28,8 @@ class UnifiedClassificationModel:
         self.cv = cv
         self.experiments = experiments
         self.prev_kernel_configuration = None
+        self.running_time = 0
+        self.times = 0
         self.initialize()
 
     def initialize(self):
@@ -99,9 +102,11 @@ class UnifiedClassificationModel:
             accuracies = []
             for i in range(self.experiments):
                 if kernel_configuration != self.prev_kernel_configuration:
+                    t1 = time.time()
                     self.K = self._kernel_strategy.get_kernel_instance(kernel_configuration, self.with_labels,
                                                                        self.with_attributes).fit_transform(self.graphs)
-                    print('check')
+                    self.running_time += time.time()-t1
+                    self.times+=1
                 K = self.K
                 y = self.y
                 self.prev_kernel_configuration = kernel_configuration
@@ -115,7 +120,7 @@ class UnifiedClassificationModel:
             tuning_results.append((stat.mean(accuracies), stat.stdev(accuracies), kernel_configuration,
                                    svm_configuration))
         result = max(tuning_results, key=itemgetter(0))
-        result = {'acc': round(result[0] * 100, 2), 'std': round(result[1] * 100, 2), 'best params': result[2],
+        result = {'acc': round(result[0] * 100, 2), 'std': round(result[1] * 100, 2),'running_time':self.running_time/self.times, 'best params': result[2],
                   'C': result[3]['C'], 'sigma': result[3]['sigma'], 'normalize': self.normalize, 'rbf': self.rbf,
                   'with_labels': self.with_labels, 'with_attributes': self.with_attributes}
         save_results(result, dataset_name, self.kernel_strategy)
@@ -123,7 +128,7 @@ class UnifiedClassificationModel:
 
 
 def save_results(result, dataset_name, kernel):
-    with open('../../../Results/Classification plateform/' + str(kernel) + '_' + dataset_name, 'w+') as f:
+    with open('../../Results/Classification plateform/' + str(kernel) + '_' + dataset_name, 'w+') as f:
         f.write('Accuracy Mean :' + str(result['acc']) + '%\n')
         f.write('Accuracy Std :' + str(result['std']) + '%\n')
         f.write('Best kernel configuration : \n')
