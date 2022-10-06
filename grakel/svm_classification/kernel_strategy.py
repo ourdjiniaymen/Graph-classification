@@ -27,7 +27,13 @@ class GraphletSamplingStrategy(KernelStrategy):
 
     def get_kernel_instance(self, configuration: dict, *args):
         from grakel.kernels import GraphletSampling
-        return GraphletSampling(k=configuration['k'])
+        n_samples = configuration['n_samples']
+        print(n_samples)
+        if n_samples == None:
+            sampling = None
+        else:
+            sampling = {'n_samples':n_samples}
+        return GraphletSampling(k=configuration['k'], sampling=sampling)
 
     def __str__(self) -> str:
         return 'GR'
@@ -130,8 +136,8 @@ class LabeledEntropyStrategy(KernelStrategy):
         from grakel.kernels import LabeledEntropy
         from grakel.kernels import LabeledEntropyAttr
         if with_attributes:
-            return LabeledEntropyAttr(k=configuration['k'], entropy_type=configuration['entropy_type'])
-        return LabeledEntropy(k=configuration['k'], entropy_type=configuration['entropy_type'])
+            return LabeledEntropyAttr(k=configuration['k'])
+        return LabeledEntropy(k=configuration['k'])
 
     def __str__(self) -> str:
         return 'LE'

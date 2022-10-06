@@ -44,4 +44,4 @@ class EvaluationSerializer(serializers.ModelSerializer):
 class ResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = Result
-        fields = '__all__'
+        fields = ('id','kernel', 'dataset', 'accuracy', 'standard_deviation', 'running_time', 'rbf', 'sigma', 'normalize', 'c','cv','experiments', 'with_labels','with_labels', 'with_attributes', 'parameters')

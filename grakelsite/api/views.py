@@ -58,11 +58,16 @@ def run_evaluation(data):
     with_labels = data['with_labels']
     with_attributes = data['with_attributes']
     kernel_strategy = get_kernel_strategy(data['kernel'])
-    kernel_configuration = reduce(lambda r, d: r.update(d) or r, data['parameters'], {})
+    #kernel_configuration = reduce(lambda r, d: r.update(d) or r, data['parameters'], {})
+    kernel_configuration = dict()
+    for param in data['parameters']:
+        kernel_configuration[param['name']] = param['values']
+    print(kernel_configuration)
     model = UnifiedClassificationModel(kernel_strategy(), kernel_configuration=kernel_configuration, svm_configuration=svm_configuration,
                                        normalize=normalize, rbf=rbf, cv=cv, experiments=experiments, with_labels=with_labels, with_attributes=with_attributes)
     result = model.tuning_classification(dataset_name)
-    params =  [{key:result['best params'][key]} for key in result['best params']]
+    params = [{'name':key,'value':result['best params'][key]} for key in result['best params']]
+    #params =  [{key:result['best params'][key]} for key in result['best params']]
     serializer = {'kernel': data['kernel'], 'dataset': dataset_name,
                   'accuracy': result['acc'], 'standard_deviation': result['std'], 'running_time': result['running_time'],
                   'rbf': result['rbf'], 'sigma': result['sigma'], 'normalize': result['normalize'],
